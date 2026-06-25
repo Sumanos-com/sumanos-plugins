@@ -6,7 +6,7 @@ coding a un agente Hermes y lo mejorás/reparás (SOUL, modelo, plugins, skills)
 ## Instalar (Claude Code)
 
 ```bash
-/plugin marketplace add GonzaloArray/sumanos-plugins
+/plugin marketplace add Sumanos-com/sumanos-plugins
 /plugin install sumanos-builder@sumanos
 ```
 
