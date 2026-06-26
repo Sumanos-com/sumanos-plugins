@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "sumanos-builder",
-  "displayName": "Sumanos Builder",
+  "name": "sumo",
+  "displayName": "Sumo",
   "version": "0.2.0",
   "description": "Mejorá tu agente Hermes (SOUL/modelo/plugins/skills) desde tu IA de coding. Te autenticás con un login en el navegador (web-auth) — sin pegar keys.",
   "author": { "name": "Sumanos", "url": "https://sumanos.com" },

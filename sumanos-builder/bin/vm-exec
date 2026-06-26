@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# vm-exec — run a shell command on an agent's Hermes VM via AWS SSM (no SSH, no port 22).
+#
+# The operator path: the coding AI (Claude Code/Codex) runs this with its OWN Bash, so it
+# gets a real terminal into the customer VM with its full agentic power — not a proxied MCP
+# tool. The VM is reached by SSM identity (golden AMI ships the SSM agent), so nothing is
+# exposed to the network. The command is base64-wrapped so $, backticks, quotes, ; reach the
+# VM verbatim and the JSON payload can never break.
+#
+#   vm-exec <instance-id> "<command>"
+#
+# Requires: awscli + jq + AWS creds for the account that owns the VM.
+set -euo pipefail
+
+INSTANCE="${1:?usage: vm-exec <instance-id> \"<command>\"}"
+CMD="${2:?usage: vm-exec <instance-id> \"<command>\"}"
+
+# Ignore any placeholder AWS creds injected by a local .env — use the real profile/SSO.
+aws() { command env -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY aws "$@"; }
+
+# base64 the command so the SSM JSON payload is plain ASCII and the shell on the VM runs it raw.
+B64=$(printf '%s' "$CMD" | base64 | tr -d '\n')
+WRAPPED="echo $B64 | base64 -d | bash"
+
+CID=$(aws ssm send-command \
+  --instance-ids "$INSTANCE" \
+  --document-name AWS-RunShellScript \
+  --parameters "{\"commands\":[\"$WRAPPED\"]}" \
+  --query 'Command.CommandId' --output text)
+
+# Poll until the invocation reaches a terminal state.
+STATUS=Pending
+for _ in $(seq 1 90); do
+  STATUS=$(aws ssm get-command-invocation --command-id "$CID" --instance-id "$INSTANCE" \
+    --query 'Status' --output text 2>/dev/null || echo Pending)
+  case "$STATUS" in Success|Failed|Cancelled|TimedOut) break ;; esac
+  sleep 1
+done
+
+OUT=$(aws ssm get-command-invocation --command-id "$CID" --instance-id "$INSTANCE" --query 'StandardOutputContent' --output text)
+ERR=$(aws ssm get-command-invocation --command-id "$CID" --instance-id "$INSTANCE" --query 'StandardErrorContent' --output text)
+printf '%s' "$OUT"
+[ -n "$ERR" ] && printf '%s' "$ERR" >&2
+[ "$STATUS" = Success ] || { echo "[vm-exec] status=$STATUS" >&2; exit 1; }
