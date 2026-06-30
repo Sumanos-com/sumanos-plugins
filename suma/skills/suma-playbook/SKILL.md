@@ -1,5 +1,5 @@
 ---
-name: sumanos-builder-playbook
+name: suma-playbook
 description: Cómo operar un agente Hermes de un cliente como staff de Sumanos (tier operador) — qué tools tenés, cuándo usar las typed vs las raw de VM, el gate de riesgo y el flujo seguro. Leer al empezar a mejorar un agente.
 ---
 

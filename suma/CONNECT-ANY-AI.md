@@ -1,4 +1,4 @@
-# 🔌 Conectá Sumanos Builder en CUALQUIER IA
+# 🔌 Conectá Suma en CUALQUIER IA
 
 Lo que viaja a todas las IAs es **UNA sola cosa: el MCP** (1 URL + 1 key).
 **No hay un "plugin" único** que se instale en todas — el formato *plugin* es solo de
@@ -24,8 +24,8 @@ Si la IA soporta "remote MCP server", esto alcanza. Lo demás son las variantes 
 ### 🟣 Claude Code — CLIENTE (login navegador, sin key)
 Instalá el plugin (trae skills + comandos). Sin header → dispara OAuth:
 ```bash
-claude --plugin-dir ./plugins/sumanos-builder      # local
-# o publicado:  /plugin install sumanos-builder@sumanos
+claude --plugin-dir ./plugins/suma      # local
+# o publicado:  /plugin install suma@sumanos
 ```
 > `.mcp.json` del plugin: `url = https://app.sumanos.com/mcp/authoring`, **sin** Authorization.
 
@@ -74,5 +74,5 @@ mcp_servers:
 
 ## 📦 Resumen
 - **El "paquete universal" = URL + key.** Funciona en toda IA con MCP remoto.
-- **El plugin de Claude Code** = ese MCP **+** skills + comandos `/sumanos-*` (extra, solo Claude Code).
+- **El plugin de Claude Code** = ese MCP **+** skills + comandos `/suma-*`.
 - Las demás IAs: pegás el bloque de arriba, listo.

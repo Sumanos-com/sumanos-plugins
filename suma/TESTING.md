@@ -1,4 +1,4 @@
-# Sumanos Builder Plugin — doc técnica + runbook E2E
+# Suma — doc técnica + runbook E2E
 
 Cómo subís el plugin, cómo se usa, y cómo se prueba de punta a punta. Esta es la
 referencia para saber **cómo actuar** sobre la VM-Hermes de un cliente.
@@ -89,15 +89,16 @@ Respuesta: `{ isError, content:[{type:"text", text:"<summary>"}] }`. El summary 
 
 ## 4. Cómo lo SUBÍS / instalás
 
-### Opción A — como plugin (recomendado, para el operador en su Claude Code)
+### Opción A — como plugin Claude Code
 1. Publicá el marketplace (`plugins/.claude-plugin/marketplace.json`) — repo o ruta local.
 2. En Claude Code:
    ```
    /plugin marketplace add <repo-o-ruta>
-   /plugin install sumanos-builder
+   /plugin install suma
    ```
-3. Te pide el `userConfig`: pegá tu **operator key** (`sumanos_api_key`, sensible) y opcional `sumanos_api_url` (default `https://api.sumanos.com`).
-4. Quedan disponibles: el MCP `sumanos` (12 tools si sos operador), las 4 skills y el comando `/sumanos-mejorar`.
+3. Usá `/suma-connect` para login de cliente por navegador.
+4. Si necesitás modo operador, conectá el MCP con Bearer como en la opción B.
+5. Quedan disponibles: el MCP `sumanos`, las skills y los comandos `/suma-*`.
 
 ### Opción B — MCP suelto (rápido, sin instalar el plugin)
 ```

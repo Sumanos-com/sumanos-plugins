@@ -1,14 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "sumanos",
-  "version": "0.1.0",
-  "description": "Marketplace de plugins de Sumanos para operadores (staff).",
-  "owner": { "name": "Sumanos", "email": "hola@sumanos.com" },
+  "version": "0.2.0",
+  "description": "Marketplace privado de plugins de Sumanos.",
+  "owner": {
+    "name": "Sumanos",
+    "email": "hola@sumanos.com"
+  },
   "plugins": [
     {
-      "name": "sumo",
-      "source": "./sumanos-builder",
-      "description": "Entra a la VM-Hermes de un cliente y la mejora (SOUL/modelo/plugins/skills) por MCP sobre SSM. Ya entrenado para operar sumanos.com.",
+      "name": "suma",
+      "source": "./suma",
+      "description": "Conecta tu IA de coding con Sumanos para leer, ajustar y reparar agentes de forma segura.",
       "category": "productivity"
     }
   ]

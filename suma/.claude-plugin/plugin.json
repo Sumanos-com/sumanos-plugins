@@ -1,15 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "sumo",
-  "displayName": "Sumo",
+  "name": "suma",
+  "displayName": "Suma",
   "version": "0.2.0",
   "description": "Mejorá tu agente Hermes (SOUL/modelo/plugins/skills) desde tu IA de coding. Te autenticás con un login en el navegador (web-auth) — sin pegar keys.",
-  "author": { "name": "Sumanos", "url": "https://sumanos.com" },
+  "author": {
+    "name": "Sumanos",
+    "url": "https://sumanos.com"
+  },
   "license": "UNLICENSED",
-  "keywords": ["sumanos", "hermes", "agent-builder", "mcp", "oauth"],
+  "keywords": [
+    "sumanos",
+    "hermes",
+    "agent-builder",
+    "mcp",
+    "oauth"
+  ],
   "mcpServers": "./.mcp.json",
   "skills": "./skills/",
-  "commands": ["./commands/sumanos-mejorar.md", "./commands/sumanos-conectar.md"],
+  "commands": [
+    "./commands/suma-connect.md",
+    "./commands/suma-check.md",
+    "./commands/suma-improve.md",
+    "./commands/suma-fix.md",
+    "./commands/suma-install.md",
+    "./commands/suma-report.md"
+  ],
   "userConfig": {
     "sumanos_api_url": {
       "type": "string",

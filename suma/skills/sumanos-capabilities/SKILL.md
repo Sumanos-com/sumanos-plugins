@@ -5,7 +5,7 @@ description: Catálogo de canales/conectores y modelos de Sumanos — qué se pu
 
 # Capacidades de Sumanos: canales, conectores y modelos
 
-> Portado del corpus de entrenamiento del builder (`core/builder/src/builder-skills.ts`,
+> Portado del corpus de entrenamiento de autoría (`core/builder/src/builder-skills.ts`,
 > skill `sumanos-capabilities`). Mantener en sync con esa fuente.
 
 ## Conectores / canales disponibles (catálogo)
