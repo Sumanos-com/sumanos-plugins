@@ -28,7 +28,7 @@ Codex, opencode, Hermes y otras IAs se conectan al mismo MCP remoto:
 https://api.sumanos.com/mcp/authoring
 ```
 
-Ver `suma/CONNECT-ANY-AI.md`.
+Ver `suma/CONNECT-ANY-AI.md`. La estructura publicable usa `suma/core/` + `suma/adapters/<host>/`.
 
 ## Mantenimiento
 

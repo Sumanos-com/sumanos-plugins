@@ -1,0 +1,11 @@
+{
+  "mcp": {
+    "sumanos": {
+      "type": "remote",
+      "url": "https://api.sumanos.com/mcp/authoring",
+      "headers": {
+        "Authorization": "Bearer {env:SUMANOS_KEY}"
+      }
+    }
+  }
+}

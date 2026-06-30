@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "sumanos",
-  "version": "0.2.0",
-  "description": "Marketplace privado de plugins de Sumanos.",
+  "version": "0.1.0",
+  "description": "Sumanos plugin marketplace for operators.",
   "owner": {
     "name": "Sumanos",
     "email": "hola@sumanos.com"
@@ -10,8 +10,14 @@
   "plugins": [
     {
       "name": "suma",
-      "source": "./suma",
-      "description": "Conecta tu IA de coding con Sumanos para leer, ajustar y reparar agentes de forma segura.",
+      "source": "./suma/adapters/claude-code",
+      "description": "Operate and improve Sumanos agents from Claude Code through MCP.",
+      "category": "productivity"
+    },
+    {
+      "name": "composio",
+      "source": "./composio",
+      "description": "Use Composio as the source of truth for external app discovery, auth, schemas, and execution.",
       "category": "productivity"
     }
   ]

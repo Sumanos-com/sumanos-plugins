@@ -91,6 +91,7 @@ Respuesta: `{ isError, content:[{type:"text", text:"<summary>"}] }`. El summary 
 
 ### Opción A — como plugin Claude Code
 1. Publicá el marketplace (`plugins/.claude-plugin/marketplace.json`) — repo o ruta local.
+   El source local de Suma apunta a `./suma/adapters/claude-code`.
 2. En Claude Code:
    ```
    /plugin marketplace add <repo-o-ruta>
@@ -137,7 +138,23 @@ Necesitás: un agente con un sandbox EC2 vivo (su `<ACCOUNT_ID>`, `<AGENT_ID>` e
 
 ---
 
-## 6. Gotchas (verificados / de memoria del repo)
+## 6. Gates de packaging
+
+```bash
+python3 -m json.tool plugins/.claude-plugin/marketplace.json >/dev/null
+python3 -m json.tool plugins/suma/core/mcp/server.json >/dev/null
+python3 -m json.tool plugins/suma/adapters/claude-code/.claude-plugin/plugin.json >/dev/null
+python3 -m json.tool plugins/suma/adapters/claude-code/.mcp.json >/dev/null
+python3 -m json.tool plugins/suma/adapters/codex/.codex-plugin/plugin.json >/dev/null
+python3 -m json.tool plugins/suma/adapters/codex/.mcp.json >/dev/null
+python3 -m json.tool plugins/suma/adapters/opencode/opencode.json >/dev/null
+
+PYTHONPATH=/tmp/codex-plugin-validate-py python3 \
+  /Users/gonza/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
+  plugins/suma/adapters/codex
+```
+
+## 7. Gotchas (verificados / de memoria del repo)
 
 - **`.env` con creds AWS placeholder** sombrea las reales → `Bun.spawn aws` falla.
   Para SSM hace falta que las creds del entorno sean reales, no las del `.env`.

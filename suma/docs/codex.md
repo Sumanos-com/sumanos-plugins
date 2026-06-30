@@ -2,8 +2,8 @@
 
 Codex puede usar Suma de dos maneras:
 
-1. **Plugin Codex** cuando exista adapter publicado.
-2. **MCP directo** hoy, usando el mismo endpoint de Sumanos.
+1. **Plugin Codex** desde `plugins/suma/adapters/codex`.
+2. **MCP directo** como fallback, usando el mismo endpoint de Sumanos.
 
 ## Instalación de plugins en Codex
 
@@ -21,7 +21,23 @@ En el browser de plugins:
 3. instalá el plugin;
 4. abrí un hilo nuevo para que Codex cargue skills/MCP.
 
-## MCP directo actual
+## Adapter Codex local
+
+```txt
+plugins/suma/adapters/codex/
+├─ .codex-plugin/plugin.json
+├─ .mcp.json
+└─ skills/
+```
+
+El manifest declara:
+
+- plugin público: `suma`;
+- MCP server id: `sumanos`;
+- bearer por env var: `SUMANOS_KEY`;
+- skills empaquetadas desde `core/skills` + skill host `suma`.
+
+## MCP directo
 
 Config en `~/.codex/config.toml`:
 
@@ -40,7 +56,7 @@ codex
 
 ## Marketplace local para desarrollo
 
-Cuando exista `plugins/suma/adapters/codex/.codex-plugin/plugin.json`, el marketplace local debe apuntar a la carpeta que contiene `.codex-plugin`.
+El marketplace local debe apuntar a la carpeta que contiene `.codex-plugin`.
 
 Ejemplo `./.agents/plugins/marketplace.json`:
 

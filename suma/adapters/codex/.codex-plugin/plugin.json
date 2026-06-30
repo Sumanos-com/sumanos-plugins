@@ -1,0 +1,44 @@
+{
+  "name": "suma",
+  "version": "0.2.0",
+  "description": "Operate and improve Sumanos agents from Codex through the Sumanos authoring MCP.",
+  "author": {
+    "name": "Sumanos",
+    "email": "hola@sumanos.com",
+    "url": "https://sumanos.com"
+  },
+  "homepage": "https://sumanos.com",
+  "repository": "https://github.com/Sumanos-com/sumanos-plugins",
+  "license": "UNLICENSED",
+  "keywords": [
+    "sumanos",
+    "suma",
+    "mcp",
+    "agent-authoring",
+    "hermes"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Suma",
+    "shortDescription": "Operate Sumanos agents from Codex",
+    "longDescription": "Suma connects Codex to the Sumanos authoring MCP so technical operators can inspect, improve, repair and report on Sumanos agents without hardcoding secrets.",
+    "developerName": "Sumanos",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://sumanos.com",
+    "privacyPolicyURL": "https://sumanos.com/privacy",
+    "termsOfServiceURL": "https://sumanos.com/terms",
+    "defaultPrompt": [
+      "Connect to Sumanos and check my agent status.",
+      "Improve my Sumanos agent safely.",
+      "Report what changed and what needs approval."
+    ],
+    "brandColor": "#111827",
+    "screenshots": []
+  }
+}

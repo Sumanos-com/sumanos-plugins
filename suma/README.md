@@ -2,34 +2,40 @@
 
 Suma conecta tu IA de coding con Sumanos para leer, ajustar y reparar agentes de forma segura.
 
-La idea simple:
-
 ```txt
-Suma = plugin/paquete
-sumanos = MCP server id
-connect / improve = acciones del usuario
-```
-
-```txt
+Producto:      Suma
+Plugin slug:   suma
 MCP server id: sumanos
 Endpoint:      https://api.sumanos.com/mcp/authoring
 Env var:       SUMANOS_KEY
 ```
 
-## Qué incluye hoy
+## Estructura
 
 ```txt
 plugins/suma/
-├─ .claude-plugin/plugin.json
-├─ .mcp.json
-├─ skills/
-├─ commands/
-└─ docs/
+├─ core/                 # contrato neutral: manifest, skills, prompts, docs, MCP metadata
+├─ adapters/
+│  ├─ claude-code/       # .claude-plugin + comandos /suma-*
+│  ├─ codex/             # .codex-plugin + MCP + skills
+│  ├─ hermes/            # plugin.yaml + register(ctx)
+│  └─ opencode/          # opencode.json
+├─ docs/
+├─ CONNECT-ANY-AI.md
+└─ TESTING.md
 ```
 
-El adapter Claude Code vive en la raíz por compatibilidad histórica. El objetivo siguiente es separar `core/` + `adapters/` como describe `docs/architecture.md`.
+La raíz es el paquete madre. Cada host instala desde su adapter.
 
-## Comandos Claude Code
+## Claude Code
+
+El adapter vive en:
+
+```txt
+plugins/suma/adapters/claude-code/
+```
+
+Comandos:
 
 - `/suma-connect` — conectar Suma con login en navegador.
 - `/suma-check` — revisar estado antes de tocar nada.
@@ -38,30 +44,21 @@ El adapter Claude Code vive en la raíz por compatibilidad histórica. El objeti
 - `/suma-install` — instalar una capacidad aprobada.
 - `/suma-report` — resumir estado, cambios y próximos pasos.
 
-## Conectar como cliente
+Marketplace local:
 
-Claude Code puede autenticarse por navegador usando el MCP sin header:
-
-```bash
-claude --plugin-dir ./plugins/suma
-/plugin install suma@sumanos
-```
-
-El `.mcp.json` usa `https://app.sumanos.com/mcp/authoring` por OAuth/browser-login cuando corresponde.
-
-## Conectar como operador
-
-```bash
-export SUMANOS_KEY="tu_operator_key"
-
-claude mcp add --transport http sumanos \
-  https://api.sumanos.com/mcp/authoring \
-  --header "Authorization: Bearer $SUMANOS_KEY"
+```txt
+plugins/.claude-plugin/marketplace.json → ./suma/adapters/claude-code
 ```
 
 ## Codex
 
-Hasta publicar el adapter Codex, usar MCP directo:
+El adapter vive en:
+
+```txt
+plugins/suma/adapters/codex/
+```
+
+Config MCP directa equivalente:
 
 ```toml
 [mcp_servers.sumanos]
@@ -69,15 +66,23 @@ url = "https://api.sumanos.com/mcp/authoring"
 bearer_token_env_var = "SUMANOS_KEY"
 ```
 
-Más detalle: `docs/codex.md`.
+## Hermes
 
-## Documentación interna
+El adapter vive en:
 
-- `docs/architecture.md` — arquitectura, naming e invariantes.
-- `docs/codex.md` — Codex plugin/MCP/marketplace local.
-- `docs/operations.md` — runbook para operar agentes.
-- `CONNECT-ANY-AI.md` — recetas rápidas por host.
-- `TESTING.md` — pruebas E2E y protocolo MCP.
+```txt
+plugins/suma/adapters/hermes/
+```
+
+Registra metadata/plugin y MCP `sumanos`. La lógica de negocio sigue en el MCP de Sumanos.
+
+## opencode
+
+El adapter vive en:
+
+```txt
+plugins/suma/adapters/opencode/opencode.json
+```
 
 ## Reglas
 

@@ -1,0 +1,23 @@
+name: suma
+product_name: Suma
+description: Operá y mejorá agentes Sumanos desde cualquier IA compatible.
+mcp:
+  server_id: sumanos
+  url: https://api.sumanos.com/mcp/authoring
+  browser_login_url: https://app.sumanos.com/mcp/authoring
+  auth:
+    bearer_env: SUMANOS_KEY
+skills:
+  - suma-playbook
+  - sumanos-capabilities
+  - agent-recipes
+  - writing-agent-souls
+prompts:
+  - suma-persona
+  - operator-runbook
+adapters:
+  - claude-code
+  - codex
+  - hermes
+  - opencode
+legacy_aliases: []

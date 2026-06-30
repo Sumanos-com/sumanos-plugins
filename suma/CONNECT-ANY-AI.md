@@ -1,9 +1,9 @@
 # 🔌 Conectá Suma en CUALQUIER IA
 
 Lo que viaja a todas las IAs es **UNA sola cosa: el MCP** (1 URL + 1 key).
-**No hay un "plugin" único** que se instale en todas — el formato *plugin* es solo de
-Claude Code. Pero **todas las IAs apuntan al mismo MCP remoto**; lo único que cambia es
-el archivo de config de cada una. Acá están todos, copy-paste.
+**No hay un "plugin" único** que se instale en todas. Hay adapters por host:
+Claude Code, Codex, Hermes y opencode. Pero **todas las IAs apuntan al mismo MCP remoto**;
+lo único que cambia es el formato de instalación/config.
 
 ## Lo único que necesitás
 - **URL:** `https://api.sumanos.com/mcp/authoring`  (Bearer — sirve para TODAS las IAs)
@@ -22,9 +22,9 @@ Si la IA soporta "remote MCP server", esto alcanza. Lo demás son las variantes 
 ---
 
 ### 🟣 Claude Code — CLIENTE (login navegador, sin key)
-Instalá el plugin (trae skills + comandos). Sin header → dispara OAuth:
+Instalá el adapter Claude Code (trae skills + comandos). Sin header → dispara OAuth:
 ```bash
-claude --plugin-dir ./plugins/suma      # local
+claude --plugin-dir ./plugins/suma/adapters/claude-code      # local
 # o publicado:  /plugin install suma@sumanos
 ```
 > `.mcp.json` del plugin: `url = https://app.sumanos.com/mcp/authoring`, **sin** Authorization.
@@ -37,6 +37,8 @@ claude mcp add --transport http sumanos \
 ```
 
 ### 🟢 Codex — `~/.codex/config.toml`
+Adapter local: `plugins/suma/adapters/codex`.
+
 ```toml
 [mcp_servers.sumanos]
 url = "https://api.sumanos.com/mcp/authoring"
@@ -44,6 +46,8 @@ bearer_token_env_var = "SUMANOS_KEY"
 ```
 
 ### 🔵 opencode — `opencode.json`
+Adapter local: `plugins/suma/adapters/opencode/opencode.json`.
+
 ```json
 {
   "mcp": {
@@ -57,6 +61,8 @@ bearer_token_env_var = "SUMANOS_KEY"
 ```
 
 ### ⚙️ Hermes (el engine) — `config.yaml`
+Adapter local: `plugins/suma/adapters/hermes`.
+
 ```yaml
 mcp_servers:
   - url: https://api.sumanos.com/mcp/authoring

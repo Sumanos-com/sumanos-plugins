@@ -1,0 +1,6 @@
+{
+  "server_id": "sumanos",
+  "type": "http",
+  "url": "https://api.sumanos.com/mcp/authoring",
+  "bearer_token_env_var": "SUMANOS_KEY"
+}
