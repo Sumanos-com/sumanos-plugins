@@ -94,7 +94,7 @@ Respuesta: `{ isError, content:[{type:"text", text:"<summary>"}] }`. El summary 
 2. En Claude Code:
    ```
    /plugin marketplace add <repo-o-ruta>
-   /plugin install suma
+   /plugin install suma@sumanos
    ```
 3. Usá `/suma-connect` para login de cliente por navegador.
 4. Si necesitás modo operador, conectá el MCP con Bearer como en la opción B.
