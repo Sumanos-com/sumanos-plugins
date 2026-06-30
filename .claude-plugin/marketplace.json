@@ -2,13 +2,22 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "sumanos",
   "version": "0.1.0",
-  "description": "Marketplace de plugins de Sumanos para operadores (staff).",
-  "owner": { "name": "Sumanos", "email": "hola@sumanos.com" },
+  "description": "Sumanos plugin marketplace for operators.",
+  "owner": {
+    "name": "Sumanos",
+    "email": "hola@sumanos.com"
+  },
   "plugins": [
     {
-      "name": "sumo",
-      "source": "./sumanos-builder",
-      "description": "Entra a la VM-Hermes de un cliente y la mejora (SOUL/modelo/plugins/skills) por MCP sobre SSM. Ya entrenado para operar sumanos.com.",
+      "name": "suma",
+      "source": "./suma/adapters/claude-code",
+      "description": "Operate and improve Sumanos agents from Claude Code through MCP.",
+      "category": "productivity"
+    },
+    {
+      "name": "composio",
+      "source": "./composio",
+      "description": "Use Composio as the source of truth for external app discovery, auth, schemas, and execution.",
       "category": "productivity"
     }
   ]

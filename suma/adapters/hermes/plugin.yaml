@@ -1,0 +1,16 @@
+name: suma
+version: 0.2.0
+display_name: Suma
+description: Operate and improve Sumanos agents through the Sumanos authoring MCP.
+entrypoint: __init__.py
+mcp_servers:
+  sumanos:
+    type: http
+    url: https://api.sumanos.com/mcp/authoring
+    headers:
+      Authorization: "Bearer ${SUMANOS_KEY}"
+skills:
+  - suma-playbook
+  - sumanos-capabilities
+  - agent-recipes
+  - writing-agent-souls

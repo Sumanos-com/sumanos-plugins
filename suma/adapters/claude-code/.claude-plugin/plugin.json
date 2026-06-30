@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "suma",
+  "displayName": "Suma",
+  "version": "0.2.0",
+  "description": "Mejorá tu agente Hermes (SOUL/modelo/plugins/skills) desde tu IA de coding. Te autenticás con un login en el navegador (web-auth) — sin pegar keys.",
+  "author": {
+    "name": "Sumanos",
+    "url": "https://sumanos.com"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "sumanos",
+    "hermes",
+    "agent-builder",
+    "mcp",
+    "oauth"
+  ],
+  "mcpServers": "./.mcp.json",
+  "skills": "./skills/",
+  "commands": [
+    "./commands/suma-connect.md",
+    "./commands/suma-check.md",
+    "./commands/suma-improve.md",
+    "./commands/suma-fix.md",
+    "./commands/suma-install.md",
+    "./commands/suma-report.md"
+  ],
+  "userConfig": {
+    "sumanos_api_url": {
+      "type": "string",
+      "title": "Sumanos API URL",
+      "description": "Origen al que conecta el cliente (login por navegador / OAuth). Es el origen del admin (app), que proxya /mcp/authoring + los .well-known del OAuth. Para Bearer/operador se usa api.sumanos.com vía `claude mcp add`. Dejalo por default salvo otro entorno.",
+      "required": false,
+      "default": "https://app.sumanos.com"
+    }
+  }
+}

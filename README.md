@@ -1,28 +1,35 @@
-# Sumanos — marketplace de plugins (Claude Code)
+# Sumanos — marketplace de plugins
 
-Marketplace privado de Sumanos. Hoy contiene **`sumanos-builder`**: conectás tu IA de
-coding a un agente Hermes y lo mejorás/reparás (SOUL, modelo, plugins, skills) por MCP.
+Marketplace privado de Sumanos. Hoy publica **Suma**: el plugin para conectar una IA de coding con Sumanos y operar agentes de forma segura.
 
-## Instalar (Claude Code)
+## Instalar en Claude Code
 
 ```bash
 /plugin marketplace add Sumanos-com/sumanos-plugins
-/plugin install sumanos-builder@sumanos
+/plugin install suma@sumanos
 ```
 
-> Repo **privado**: tu Claude Code usa tus credenciales git (`gh auth login` /
-> `GITHUB_TOKEN`) para bajarlo, igual que un `git clone`.
+## Qué trae Suma
 
-- **Cliente** (dueño del agente): al usar una tool, Claude Code abre el navegador y te
-  logueás en Sumanos (OAuth, sin pegar keys). Conecta a `https://app.sumanos.com/mcp/authoring`.
-- **Operador** (staff): conectás con tu operator key (Bearer) — ver `sumanos-builder/README.md`.
+```txt
+/suma-connect  conectar
+/suma-check    revisar sin tocar
+/suma-improve  mejorar
+/suma-fix      reparar
+/suma-install  instalar capacidad
+/suma-report   explicar estado
+```
 
-## Otras IAs (Codex, opencode)
+## Otros hosts
 
-No usan plugins: pegás un bloque de config que apunta al mismo MCP remoto. Ver
-`sumanos-builder/CONNECT-ANY-AI.md`.
+Codex, opencode, Hermes y otras IAs se conectan al mismo MCP remoto:
+
+```txt
+https://api.sumanos.com/mcp/authoring
+```
+
+Ver `suma/CONNECT-ANY-AI.md`. La estructura publicable usa `suma/core/` + `suma/adapters/<host>/`.
 
 ## Mantenimiento
 
-La fuente canónica del plugin vive en el monorepo (`plugins/sumanos-builder/`). Este repo
-es la copia publicable para que las IAs lo descarguen; se actualiza re-publicando.
+La fuente de trabajo vive en `sumanos-agents/plugins/suma/`. Este repo es la copia publicable para instalaciones externas.
