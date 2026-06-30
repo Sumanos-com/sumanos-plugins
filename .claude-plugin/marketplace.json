@@ -15,6 +15,12 @@
       "category": "productivity"
     },
     {
+      "name": "suma-codex",
+      "source": "./suma/adapters/codex",
+      "description": "Operate and improve Sumanos agents from Codex through the Sumanos authoring MCP (bearer key).",
+      "category": "productivity"
+    },
+    {
       "name": "composio",
       "source": "./composio",
       "description": "Use Composio as the source of truth for external app discovery, auth, schemas, and execution.",
