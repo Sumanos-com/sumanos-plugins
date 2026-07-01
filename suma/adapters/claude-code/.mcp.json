@@ -2,7 +2,10 @@
   "mcpServers": {
     "sumanos": {
       "type": "http",
-      "url": "${user_config.sumanos_api_url}/mcp/authoring"
+      "url": "https://api.sumanos.com/mcp/authoring",
+      "headers": {
+        "Authorization": "Bearer ${SUMANOS_KEY}"
+      }
     }
   }
 }
