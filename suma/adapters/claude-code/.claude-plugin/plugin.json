@@ -2,20 +2,14 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "suma",
   "displayName": "Suma",
-  "version": "0.3.0",
-  "description": "Operá y mejorá tu agente Sumanos desde tu IA de coding. Conectás con tu Sumanos key (env var SUMANOS_KEY): una org key te da autoría (SOUL, modelo, plugins, skills); una operator key te da además acceso a la VM. La key define el tier.",
+  "version": "0.4.0",
+  "description": "Operá tu agente Sumanos desde Claude Code. URL dedicada /mcp/authoring/agents/$SUMANOS_AGENT_ID. Login OAuth (owner/admin) o API key admin en SUMANOS_KEY.",
   "author": {
     "name": "Sumanos",
     "url": "https://sumanos.com"
   },
   "license": "UNLICENSED",
-  "keywords": [
-    "sumanos",
-    "hermes",
-    "agent-builder",
-    "mcp",
-    "bearer"
-  ],
+  "keywords": ["sumanos", "hermes", "agent-builder", "mcp", "bearer"],
   "mcpServers": "./.mcp.json",
   "skills": "./skills/",
   "commands": [

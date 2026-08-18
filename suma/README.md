@@ -6,8 +6,9 @@ Suma conecta tu IA de coding con Sumanos para leer, ajustar y reparar agentes de
 Producto:      Suma
 Plugin slug:   suma
 MCP server id: sumanos
-Endpoint:      https://api.sumanos.com/mcp/authoring
-Env var:       SUMANOS_KEY
+Endpoint prod: https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}
+Endpoint dev:  https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}
+Auth:          OAuth (owner/admin) or SUMANOS_KEY (admin API key)
 ```
 
 ## Estructura
@@ -62,7 +63,7 @@ Config MCP directa equivalente:
 
 ```toml
 [mcp_servers.sumanos]
-url = "https://api.sumanos.com/mcp/authoring"
+url = "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
 bearer_token_env_var = "SUMANOS_KEY"
 ```
 

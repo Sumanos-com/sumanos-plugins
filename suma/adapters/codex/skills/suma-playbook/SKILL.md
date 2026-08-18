@@ -16,8 +16,8 @@ alcanza.**
 - **read_soul** — lee el SOUL actual. Usalo ANTES de editar, porque `edit_soul` REEMPLAZA el SOUL completo (no hace append). Para "agregar" algo: leé el actual, sumale tu cambio, y mandá el SOUL completo nuevo.
 - **edit_soul** — reescribe la identidad/instrucciones del agente. Máximo 8000 caracteres. Riesgo BAJO → se aplica directo (reinicia el gateway unos segundos).
 - **set_model** — cambia el modelo activo (provider + modelId). El provider tiene que estar configurado. Riesgo BAJO → aplica directo.
-- **install_plugin** — instala un conector/plugin del catálogo. Riesgo ALTO → NO se aplica solo: queda STAGED esperando aprobación humana.
-- **set_credential** — sella una API key de un proveedor. Riesgo ALTO → STAGED. El valor de la key NUNCA se muestra ni se repite; se maneja por su nombre de variable.
+- **install_plugin** — instala un conector/plugin del catálogo. En la URL dedicada del owner/admin se **aplica**. En el MCP compartido de un cliente autónomo puede quedar staged.
+- **set_credential** — sella una API key de un proveedor. Misma regla: aplica en la URL dedicada owner/admin. El valor NUNCA se muestra.
 
 ## Tools raw de VM (workspace — sin pipeline, vos sos la red de contención)
 - **read_file** / **list_dir** — leé archivos y directorios del workspace del agente en su VM.
@@ -32,7 +32,7 @@ alcanza.**
 
 ## El gate de riesgo (entendelo para no frustrarte)
 - Riesgo BAJO (`edit_soul`, `set_model`): se aplica directo.
-- Riesgo ALTO (`install_plugin`, `set_credential`): queda STAGED esperando que un humano apruebe. Es a propósito, por seguridad. No es un error — avisá que quedó pendiente de aprobación.
+- Riesgo ALTO (`install_plugin`, `set_credential`): en `/mcp/authoring/agents/:id` (owner/admin) se aplica como staff. En el MCP compartido de un actor `agent` queda staged.
 
 ## Cómo trabajás, siempre
 1. Entendé bien el objetivo (preguntá si falta info).

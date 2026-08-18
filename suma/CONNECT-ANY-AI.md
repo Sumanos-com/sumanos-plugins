@@ -1,84 +1,75 @@
-# 🔌 Conectá Suma en CUALQUIER IA
+# Conectá Suma en cualquier IA
 
-Lo que viaja a todas las IAs es **UNA sola cosa: el MCP** (1 URL + 1 key).
-**No hay un "plugin" único** que se instale en todas. Hay adapters por host:
-Claude Code, Codex, Hermes y opencode. Pero **todas las IAs apuntan al mismo MCP remoto**;
-lo único que cambia es el formato de instalación/config.
+El contrato del cliente es **un MCP por agente**.
 
-## Lo único que necesitás
-- **URL:** `https://api.sumanos.com/mcp/authoring`  (Bearer — sirve para TODAS las IAs)
-- **Key:** tu **operator key** (la mintea el superadmin, scoped a 1 org) o una **api_key de cliente**.
-  Guardala en la env var `SUMANOS_KEY`.
-- *(Solo Claude Code, opcional: login por navegador SIN key — usa `https://app.sumanos.com/mcp/authoring`.)*
-
-## 🧩 Receta genérica (cualquier IA con MCP remoto: Cursor, Windsurf, VS Code, etc.)
-En la config MCP de la herramienta, agregá un server **remoto/http** así:
-- type: `http` (o `remote`)
-- url: `https://api.sumanos.com/mcp/authoring`
-- header: `Authorization: Bearer <tu-key>`
-
-Si la IA soporta "remote MCP server", esto alcanza. Lo demás son las variantes exactas:
-
----
-
-### 🟣 Claude Code — CLIENTE (login navegador, sin key)
-Instalá el adapter Claude Code (trae skills + comandos). Sin header → dispara OAuth:
-```bash
-claude --plugin-dir ./plugins/suma/adapters/claude-code      # local
-# o publicado:  /plugin install suma@sumanos
 ```
-> `.mcp.json` del plugin: `url = https://app.sumanos.com/mcp/authoring`, **sin** Authorization.
+prod:     https://app.sumanos.com/mcp/authoring/agents/<agentId>          (server id: sumanos)
+develop:  https://development.sumanos.com/mcp/authoring/agents/<agentId>  (server id: sumanos-dev)
+```
 
-### 🟣 Claude Code — OPERADOR (con key)
+Auth: **OAuth** (owner/admin) o **API key admin** en `SUMANOS_KEY`.
+Env del agente: `SUMANOS_AGENT_ID`. Para probar, conectá `sumanos-dev`.
+
+Staff / operator sigue usando la URL compartida `/mcp/authoring` (no esta).
+
+## Receta
+
+- type: `http` / `remote`
+- url prod: `https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}`
+- url develop: `https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}`
+- OAuth: sin header → login en el navegador
+- API key: `Authorization: Bearer $SUMANOS_KEY` (rol admin)
+
+### Claude Code
+
 ```bash
-claude mcp add --transport http sumanos \
-  https://api.sumanos.com/mcp/authoring \
+export SUMANOS_AGENT_ID="<agentId>"
+claude --plugin-dir ./plugins/suma/adapters/claude-code
+# o: /plugin install suma@sumanos
+# luego: /mcp → sumanos → Authenticate
+```
+
+API key:
+
+```bash
+claude mcp add sumanos --transport http \
+  https://app.sumanos.com/mcp/authoring/agents/$SUMANOS_AGENT_ID \
   --header "Authorization: Bearer $SUMANOS_KEY"
 ```
 
-### 🟢 Codex — `~/.codex/config.toml`
-Adapter local: `plugins/suma/adapters/codex`.
+### Codex
+
+Adapter: `plugins/suma/adapters/codex`.
 
 ```toml
 [mcp_servers.sumanos]
-url = "https://api.sumanos.com/mcp/authoring"
+url = "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
 bearer_token_env_var = "SUMANOS_KEY"
 ```
 
-### 🔵 opencode — `opencode.json`
-Adapter local: `plugins/suma/adapters/opencode/opencode.json`.
+OAuth: `codex mcp login sumanos` (sin key). Con key: exportá `SUMANOS_KEY`.
+
+### opencode
 
 ```json
 {
   "mcp": {
     "sumanos": {
       "type": "remote",
-      "url": "https://api.sumanos.com/mcp/authoring",
-      "headers": { "Authorization": "Bearer {env:SUMANOS_KEY}" }
+      "url": "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}",
+      "enabled": true
     }
   }
 }
 ```
 
-### ⚙️ Hermes (el engine) — `config.yaml`
-Adapter local: `plugins/suma/adapters/hermes`.
+API key: agregá `"headers": { "Authorization": "Bearer $SUMANOS_KEY" }`.
+
+### Hermes
 
 ```yaml
 mcp_servers:
-  - url: https://api.sumanos.com/mcp/authoring
+  - url: https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}
     headers:
       Authorization: "Bearer ${SUMANOS_KEY}"
 ```
-
----
-
-## ¿Qué da cada tier?
-| Tier | Cómo conecta | Qué puede |
-|---|---|---|
-| **Cliente** | OAuth (Claude Code) o api_key de cliente (Bearer) | tools de autoría; lo de alto riesgo queda en cola de aprobación |
-| **Operador** | operator key (Bearer) | apply directo + las 6 workspace tools sobre la VM por SSM |
-
-## 📦 Resumen
-- **El "paquete universal" = URL + key.** Funciona en toda IA con MCP remoto.
-- **El plugin de Claude Code** = ese MCP **+** skills + comandos `/suma-*`.
-- Las demás IAs: pegás el bloque de arriba, listo.

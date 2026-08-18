@@ -1,6 +1,16 @@
 {
   "server_id": "sumanos",
   "type": "http",
-  "url": "https://api.sumanos.com/mcp/authoring",
-  "bearer_token_env_var": "SUMANOS_KEY"
+  "url": "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}",
+  "bearer_token_env_var": "SUMANOS_KEY",
+  "environments": {
+    "prod": {
+      "id": "sumanos",
+      "url": "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
+    },
+    "develop": {
+      "id": "sumanos-dev",
+      "url": "https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
+    }
+  }
 }

@@ -72,7 +72,7 @@ El servidor id debe seguir siendo `sumanos` porque representa la plataforma, no 
 
 | Tier | Actor | Capacidades |
 |---|---|---|
-| Cliente | Dueño del agente | Autoría segura; alto riesgo queda staged |
+| Cliente | Dueño del agente | URL dedicada: misma mano que staff en ESE agente (VM + apply) |
 | Operador | Staff autorizado | Autoría directa + workspace tools auditadas |
 | Superadmin | Plataforma | Mint de operator keys scopeadas; no ejecuta directo sobre VMs |
 

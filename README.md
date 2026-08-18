@@ -1,6 +1,6 @@
 # Sumanos — marketplace de plugins
 
-Marketplace privado de Sumanos. Hoy publica **Suma**: el plugin para conectar una IA de coding con Sumanos y operar agentes de forma segura.
+Publica **Suma**: el plugin para conectar Claude Code, Codex, opencode o Hermes a **un** agente Sumanos.
 
 ## Instalar en Claude Code
 
@@ -9,7 +9,26 @@ Marketplace privado de Sumanos. Hoy publica **Suma**: el plugin para conectar un
 /plugin install suma@sumanos
 ```
 
-## Qué trae Suma
+Luego, en el dashboard (Connectors) copiá el `agentId` y autenticá:
+
+```bash
+export SUMANOS_AGENT_ID="<agentId>"
+# OAuth (owner/admin):
+#   /mcp → sumanos → Authenticate
+# o API key admin:
+export SUMANOS_KEY="sk_live_..."
+```
+
+## Entornos
+
+| Server | URL |
+|---|---|
+| `sumanos` | `https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}` |
+| `sumanos-dev` | `https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}` |
+
+Para probar usá **sumanos-dev**. Prod es **sumanos**.
+
+## Qué trae
 
 ```txt
 /suma-connect  conectar
@@ -20,16 +39,12 @@ Marketplace privado de Sumanos. Hoy publica **Suma**: el plugin para conectar un
 /suma-report   explicar estado
 ```
 
-## Otros hosts
+Owner/admin en la URL dedicada puede SOUL, modelo, plugins del catálogo, keys, skills y VM. Member queda afuera.
 
-Codex, opencode, Hermes y otras IAs se conectan al mismo MCP remoto:
+## Codex
 
-```txt
-https://api.sumanos.com/mcp/authoring
+```bash
+codex plugin add suma-codex@sumanos
 ```
 
-Ver `suma/CONNECT-ANY-AI.md`. La estructura publicable usa `suma/core/` + `suma/adapters/<host>/`.
-
-## Mantenimiento
-
-La fuente de trabajo vive en `sumanos-agents/plugins/suma/`. Este repo es la copia publicable para instalaciones externas.
+La fuente de trabajo vive en `sumanos-agents/plugins/suma/`. Este repo es la copia publicable.
