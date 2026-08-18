@@ -2,10 +2,11 @@
   "mcpServers": {
     "sumanos": {
       "type": "http",
-      "url": "https://api.sumanos.com/mcp/authoring",
-      "headers": {
-        "Authorization": "Bearer ${SUMANOS_KEY}"
-      }
+      "url": "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
+    },
+    "sumanos-dev": {
+      "type": "http",
+      "url": "https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
     }
   }
 }

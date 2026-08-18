@@ -43,7 +43,7 @@ Config en `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.sumanos]
-url = "https://api.sumanos.com/mcp/authoring"
+url = "https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}"
 bearer_token_env_var = "SUMANOS_KEY"
 ```
 

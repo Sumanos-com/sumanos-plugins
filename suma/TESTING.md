@@ -40,8 +40,8 @@ server en el `inputSchema`). `list_agents` NO lo lleva (listás para *encontrar*
 | `read_soul` | `agentId` | lee |
 | `edit_soul` | `agentId`, `content` (≤8000) | BAJO → aplica directo (reinicia gateway) |
 | `set_model` | `agentId`, `provider`, `modelId` | BAJO → directo |
-| `install_plugin` | `agentId`, `ref` | **ALTO → STAGED** (aprobación humana) |
-| `set_credential` | `agentId`, `name`, `value` | **ALTO → STAGED** (valor nunca se muestra) |
+| `install_plugin` | `agentId`, `ref` | dedicated owner/admin → **applies**; shared `agent` actor → staged |
+| `set_credential` | `agentId`, `name`, `value` | same; value never echoed |
 
 ### Workspace (raw VM — solo tier OPERADOR, sin pipeline; vos sos la red de contención)
 | Tool | Args | Qué hace |
@@ -167,3 +167,70 @@ PYTHONPATH=/tmp/codex-plugin-validate-py python3 \
   (el patrón reusa ec2.ts:306).
 - **El engine falla en silencio**: validá antes de escribir y verificá con
   `read_logs` que el cambio TOMÓ efecto (no solo "running").
+
+---
+
+## 8. Evidencia 2026-06-30 — packaging/E2E local
+
+### ✅ Claude adapter load
+
+```bash
+claude --plugin-dir plugins/suma/adapters/claude-code plugin details suma
+```
+
+Resultado:
+
+```txt
+Suma (suma) 0.2.0
+Skills (4) agent-recipes, suma-playbook, sumanos-capabilities, writing-agent-souls
+MCP servers (2) sumanos, sumanos-dev
+```
+
+### ✅ Gates locales
+
+- JSON manifests válidos.
+- `claude plugin validate plugins/suma/adapters/claude-code` pasó.
+- `claude plugin validate plugins/.claude-plugin/marketplace.json` pasó.
+- `validate_plugin.py plugins/suma/adapters/codex` pasó.
+- Naming guard sin hits legacy en superficies publicables.
+
+### ✅ Instalación desde marketplace en HOME temporal
+
+```bash
+HOME=/private/tmp/suma-claude-home claude plugin marketplace add /private/tmp/sumanos-plugins-close
+HOME=/private/tmp/suma-claude-home claude plugin install suma@sumanos --scope user
+HOME=/private/tmp/suma-claude-home claude plugin details suma
+```
+
+Resultado:
+
+```txt
+Successfully added marketplace: sumanos
+Successfully installed plugin: suma@sumanos
+Source: suma@sumanos
+Skills (4) agent-recipes, suma-playbook, sumanos-capabilities, writing-agent-souls
+MCP servers (2) sumanos, sumanos-dev
+```
+
+### ✅ MCP registrado en Claude
+
+```bash
+HOME=/private/tmp/suma-claude-home claude mcp list
+```
+
+Resultado:
+
+```txt
+plugin:suma:sumanos: https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID} (HTTP)
+plugin:suma:sumanos-dev: https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID} (HTTP)
+```
+
+### 🟡 Bloqueos para E2E MCP autenticado
+
+- OAuth/browser-login no puede completarse en este runner porque `stdin` no es TTY:
+  `stdin isn't a terminal, so authentication can't be completed here`.
+- `SUMANOS_KEY` / `SUMANOS_OPERATOR_KEY` no están presentes en el entorno, por lo que no se puede llamar `list_agents` autenticado.
+- El endpoint MCP productivo responde correctamente el boundary de auth sin token:
+  `401 unauthorized: missing bearer token`.
+
+Conclusión: instalación, carga del plugin y registro MCP están verificados. Falta una corrida interactiva de OAuth o una `SUMANOS_KEY` válida para ejecutar `list_agents` real.

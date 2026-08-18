@@ -1,29 +1,24 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "sumanos",
-  "version": "0.1.0",
-  "description": "Sumanos plugin marketplace for operators.",
+  "version": "0.4.0",
+  "description": "Suma: operate your Sumanos agent from Claude Code, Codex, opencode, or Hermes.",
   "owner": {
     "name": "Sumanos",
-    "email": "hola@sumanos.com"
+    "email": "hola@sumanos.com",
+    "url": "https://sumanos.com"
   },
   "plugins": [
     {
       "name": "suma",
       "source": "./suma/adapters/claude-code",
-      "description": "Operate and improve Sumanos agents from Claude Code through MCP.",
+      "description": "Dedicated MCP per agent. OAuth (owner/admin) or SUMANOS_KEY. Prod + develop.",
       "category": "productivity"
     },
     {
       "name": "suma-codex",
       "source": "./suma/adapters/codex",
-      "description": "Operate and improve Sumanos agents from Codex through the Sumanos authoring MCP (bearer key).",
-      "category": "productivity"
-    },
-    {
-      "name": "composio",
-      "source": "./composio",
-      "description": "Use Composio as the source of truth for external app discovery, auth, schemas, and execution.",
+      "description": "Suma for Codex. Dedicated URL + SUMANOS_KEY (admin) and SUMANOS_AGENT_ID.",
       "category": "productivity"
     }
   ]

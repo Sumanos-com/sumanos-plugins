@@ -25,4 +25,4 @@ Pedido del usuario: **$ARGUMENTS**
 - No muestres secretos.
 - No interpoles texto del cliente en shell.
 - Usá tools typed antes que workspace tools.
-- `install_plugin` y `set_credential` pueden quedar staged si requieren aprobación humana.
+- En la URL dedicada, `install_plugin` y `set_credential` se aplican. Skills nuevas: `write_file` en la carpeta de skills del profile.

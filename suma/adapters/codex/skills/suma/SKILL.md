@@ -8,9 +8,10 @@ description: Use when operating or improving a Sumanos/Hermes agent from Codex t
 Suma connects Codex to the Sumanos authoring MCP.
 
 ```txt
-MCP server id: sumanos
-Endpoint:      https://api.sumanos.com/mcp/authoring
-Bearer env:    SUMANOS_KEY
+MCP server id: sumanos (prod) | sumanos-dev (develop)
+Endpoint prod: https://app.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}
+Endpoint dev:  https://development.sumanos.com/mcp/authoring/agents/${SUMANOS_AGENT_ID}
+Auth:          OAuth or admin API key in SUMANOS_KEY
 ```
 
 ## Operating flow
