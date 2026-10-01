@@ -1,9 +1,10 @@
 """Suma Hermes adapter and safe MCP configuration materializer."""
 
 import copy
+import hashlib
 import re
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Optional, Sequence
 
 ENVIRONMENTS = {
     "production": "https://app.sumanos.com",
@@ -18,14 +19,56 @@ SKILLS = (
 _NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ._-]{0,63}$")
 _AGENT_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._~-]{0,127}$")
 _ENV_RE = re.compile(r"^[A-Z_][A-Z0-9_]{0,127}$")
+_OWNER_SCHEMA = "suma.hermes-connection/v1"
+_OWNER_ADAPTER = "suma-hermes"
+_OWNER_FIELDS = {
+    "schema",
+    "adapter",
+    "connection_name",
+    "environment",
+    "agentId",
+    "keyEnv",
+}
 
 
 def _server_name(name: str) -> str:
-    slug = re.sub(r"[ ._]+", "-", name.strip()).lower()
-    return f"suma-{slug}"
+    canonical_name = name.casefold()
+    slug = re.sub(r"[^a-z0-9]+", "-", canonical_name).strip("-")[:40].strip("-")
+    suffix = hashlib.sha256(canonical_name.encode("utf-8")).hexdigest()[:16]
+    return f"suma-{slug or 'connection'}-{suffix}"
+
+
+def _ownership(server: Any) -> Optional[dict[str, str]]:
+    """Read only an exact, versioned Suma ownership marker; reject malformed claims."""
+    if not isinstance(server, Mapping):
+        return None
+    marker = server.get("suma")
+    if not isinstance(marker, Mapping):
+        return None
+    if marker.get("adapter") != _OWNER_ADAPTER and marker.get("schema") != _OWNER_SCHEMA:
+        return None
+    if set(marker) != _OWNER_FIELDS:
+        raise ValueError("Malformed Suma Hermes ownership metadata")
+    owner = dict(marker)
+    if (
+        owner["schema"] != _OWNER_SCHEMA
+        or owner["adapter"] != _OWNER_ADAPTER
+        or not isinstance(owner["connection_name"], str)
+        or not owner["connection_name"]
+        or not isinstance(owner["environment"], str)
+        or owner["environment"] not in ENVIRONMENTS
+        or not isinstance(owner["agentId"], str)
+        or not _AGENT_ID_RE.fullmatch(owner["agentId"])
+        or not isinstance(owner["keyEnv"], str)
+        or not _ENV_RE.fullmatch(owner["keyEnv"])
+    ):
+        raise ValueError("Malformed Suma Hermes ownership metadata")
+    return owner
 
 
 def _validate_descriptors(descriptors: Sequence[Mapping[str, str]]) -> list[dict[str, str]]:
+    if not isinstance(descriptors, Sequence) or isinstance(descriptors, (str, bytes)):
+        raise ValueError("Suma connections must be provided as a sequence of descriptors")
     validated = []
     names: set[str] = set()
     server_names: set[str] = set()
@@ -41,7 +84,7 @@ def _validate_descriptors(descriptors: Sequence[Mapping[str, str]]) -> list[dict
         key_env = item.get("keyEnv")
         if not isinstance(name, str) or not _NAME_RE.fullmatch(name) or name != name.strip():
             raise ValueError("Connection name must be a trimmed, human-safe name")
-        if environment not in ENVIRONMENTS:
+        if not isinstance(environment, str) or environment not in ENVIRONMENTS:
             raise ValueError("Connection environment must be production or development")
         if not isinstance(agent_id, str) or not _AGENT_ID_RE.fullmatch(agent_id):
             raise ValueError("Agent ID must be a single safe path component")
@@ -85,6 +128,44 @@ def materialize_connections(
     if not isinstance(existing, Mapping):
         raise ValueError("Hermes mcp_servers must be a mapping")
 
+    target_names = {item["name"].casefold() for item in validated}
+    managed: list[tuple[str, dict[str, str]]] = []
+    for current_id, current_server in existing.items():
+        owner = _ownership(current_server)
+        if owner is None:
+            continue
+        if current_id != _server_name(owner["connection_name"]):
+            raise ValueError("Suma Hermes ownership metadata does not match its server ID")
+        if owner["connection_name"] in target_names:
+            continue
+        managed.append((current_id, owner))
+
+    used_names: set[str] = set()
+    used_agent_ids: set[str] = set()
+    used_key_envs: set[str] = set()
+    for _current_id, owner in managed:
+        owner_name = owner["connection_name"]
+        if (
+            owner_name in used_names
+            or owner["agentId"] in used_agent_ids
+            or owner["keyEnv"] in used_key_envs
+        ):
+            raise ValueError("Existing Suma connections violate the uniqueness contract")
+        used_names.add(owner_name)
+        used_agent_ids.add(owner["agentId"])
+        used_key_envs.add(owner["keyEnv"])
+    for item in validated:
+        canonical_name = item["name"].casefold()
+        if (
+            canonical_name in used_names
+            or item["agentId"] in used_agent_ids
+            or item["keyEnv"] in used_key_envs
+        ):
+            raise ValueError("Suma connection name, agent ID, and key environment must be unique")
+        used_names.add(canonical_name)
+        used_agent_ids.add(item["agentId"])
+        used_key_envs.add(item["keyEnv"])
+
     updated = copy.deepcopy(dict(config))
     servers = copy.deepcopy(dict(existing))
     for descriptor in validated:
@@ -95,27 +176,23 @@ def materialize_connections(
                 f"{descriptor['agentId']}"
             ),
             "headers": {"Authorization": f"Bearer ${{{descriptor['keyEnv']}}}"},
+            "suma": {
+                "schema": _OWNER_SCHEMA,
+                "adapter": _OWNER_ADAPTER,
+                "connection_name": descriptor["name"].casefold(),
+                "environment": descriptor["environment"],
+                "agentId": descriptor["agentId"],
+                "keyEnv": descriptor["keyEnv"],
+            },
         }
         prior = servers.get(server_name)
-        if prior is not None and not _is_suma_server(prior):
-            raise ValueError(f"Hermes MCP server name already exists: {server_name}")
+        if prior is not None:
+            owner = _ownership(prior)
+            if owner is None or owner["connection_name"] != descriptor["name"].casefold():
+                raise ValueError(f"Hermes MCP server name already exists: {server_name}")
         servers[server_name] = server
     updated["mcp_servers"] = servers
     return updated
-
-
-def _is_suma_server(server: Any) -> bool:
-    if not isinstance(server, Mapping):
-        return False
-    url = server.get("url", "")
-    headers = server.get("headers", {})
-    authorization = headers.get("Authorization") if isinstance(headers, Mapping) else None
-    return (
-        isinstance(url, str)
-        and "/mcp/authoring/agents/" in url
-        and isinstance(authorization, str)
-        and re.fullmatch(r"Bearer \$\{[A-Z_][A-Z0-9_]*\}", authorization) is not None
-    )
 
 
 def remove_connection(config: Mapping[str, Any], name: str) -> dict[str, Any]:
@@ -131,7 +208,8 @@ def remove_connection(config: Mapping[str, Any], name: str) -> dict[str, Any]:
     servers = copy.deepcopy(dict(existing))
     server_name = _server_name(name)
     if server_name in servers:
-        if not _is_suma_server(servers[server_name]):
+        owner = _ownership(servers[server_name])
+        if owner is None or owner["connection_name"] != name.casefold():
             raise ValueError(f"Refusing to remove unrelated Hermes MCP server: {server_name}")
         del servers[server_name]
     if servers:

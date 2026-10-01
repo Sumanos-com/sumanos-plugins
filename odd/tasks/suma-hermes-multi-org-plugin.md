@@ -36,8 +36,11 @@ method that Hermes does not expose, so the plugin can install without making Sum
 ## Delivery
 
 - Branch: `feat/hermes-multi-org-collaborator`
-- Strategy: `ask-on-risk`
+- Strategy: `exception-ok`
 - Forecast: approximately 350 authored changed lines, excluding generated fixtures.
+- Actual: 584 authored changed lines excluding this task document; the maintainer explicitly
+  approved a single-PR `size:exception` because splitting the adapter contract, implementation,
+  and tests would create artificial intermediate states.
 - Pull request target: `main` (the canonical plugin repository has no `develop` branch).
 
 ## TDD
@@ -80,10 +83,23 @@ method that Hermes does not expose, so the plugin can install without making Sum
 
 ## Verification Evidence
 
-- Pending.
+- Correction RED: `python3 -m unittest` for the two new regressions failed as expected:
+  alias-colliding names yielded one server instead of two, and removal did not refuse a
+  lookalike server without Suma ownership metadata.
+- Correction GREEN: Python contract tests passed 8/8; focused Bun tests passed 16/16;
+  skill sync check, Python compilation, and `git diff --check` passed.
+- Server IDs include a bounded 16-hex SHA-256 suffix of the casefolded exact connection name;
+  alias slug collisions remain distinct while case-only updates keep the same ID. Add/update
+  scans owned markers to enforce name, agent-ID, and key-env uniqueness across prior entries.
+- Ownership marker is namespaced and versioned; it stores only canonical name, environment,
+  agent ID, and key variable name, not a key value, and is never sent as an HTTP header.
+  Hermes host source confirmation in the pinned checkout: `hermes_cli/config.py` declares
+  `mcp_servers` open-dict; `tools/mcp_tool.py` recursively interpolates values and preserves
+  unknown fields, then its HTTP runner reads documented transport settings such as `url` and
+  `headers`. Its security validator inspects known command/args/env fields, not marker metadata.
 
 ## Progress
 
 - Completed: read-only repository and Hermes host mapping.
 - Current: PLUGIN-4.
-- Next: run final checks, review diff, and report exact repository status to the parent.
+- Next: parent review; this worker must not push or open a PR.
