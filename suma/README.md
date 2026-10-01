@@ -69,13 +69,16 @@ bearer_token_env_var = "SUMANOS_KEY"
 
 ## Hermes
 
-El adapter vive en:
+The adapter lives in:
 
 ```txt
 plugins/suma/adapters/hermes/
 ```
 
-Registra metadata/plugin y MCP `sumanos`. La lógica de negocio sigue en el MCP de Sumanos.
+It materializes one dedicated MCP server per named connection in Hermes' `config.yaml` and
+registers the four Suma skills through Hermes' public plugin context API. See
+[`adapters/hermes/README.md`](adapters/hermes/README.md) for canonical installation,
+configuration, secret injection, removal, and environment behavior.
 
 ## opencode
 

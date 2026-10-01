@@ -84,11 +84,13 @@ describe('Suma adapters pin the dedicated customer MCP', () => {
     expect(json.mcp.sumanos.headers).toBeUndefined();
   });
 
-  test('hermes uses the dedicated URL plus SUMANOS_KEY', () => {
-    const raw = read('adapters/hermes/plugin.yaml');
-    expect(raw).toContain('/mcp/authoring/agents/');
-    expect(raw).toContain('SUMANOS_AGENT_ID');
-    expect(raw).toContain('SUMANOS_KEY');
+  test('hermes uses its supported config materializer instead of ignored manifest fields', () => {
+    const manifest = read('adapters/hermes/plugin.yaml');
+    const adapter = read('adapters/hermes/__init__.py');
+    expect(manifest).not.toContain('mcp_servers:');
+    expect(manifest).not.toContain('skills:');
+    expect(adapter).toContain('materialize_connections');
+    expect(adapter).toContain('ctx.register_skill');
   });
 
   test('core contract files use the dedicated path', () => {
@@ -133,13 +135,14 @@ describe('Suma adapters ship prod and develop MCP servers', () => {
     expect(json.mcp['sumanos-dev']?.url).toContain('development.sumanos.com');
   });
 
-  test('hermes registers both environments', () => {
-    const raw = read('adapters/hermes/plugin.yaml');
-    expect(raw).toContain('sumanos-dev');
-    expect(raw).toContain(
-      `https://development.sumanos.com/mcp/authoring/agents/\${SUMANOS_AGENT_ID}`,
-    );
-    expect(raw).toContain(`https://app.sumanos.com/mcp/authoring/agents/\${SUMANOS_AGENT_ID}`);
+  test('hermes materializes both environments from explicit descriptors', () => {
+    const adapter = read('adapters/hermes/__init__.py');
+    const configure = read('adapters/hermes/configure.py');
+    expect(adapter).toContain('https://app.sumanos.com');
+    expect(adapter).toContain('https://development.sumanos.com');
+    expect(adapter).toContain('/mcp/authoring/agents/');
+    expect(configure).toContain('read_raw_config');
+    expect(configure).toContain('save_config');
   });
 
   test('core manifest and server.json list both environments', () => {
