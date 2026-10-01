@@ -66,10 +66,12 @@ method that Hermes does not expose, so the plugin can install without making Sum
     `read_raw_config`/`save_config` to avoid reading expanded key values.
   - GREEN evidence: Python contract tests 4/4; focused Bun tests 16/16; skill sync check passed.
 
-- [ ] **PLUGIN-3 — Document installation and operation**
+- [x] **PLUGIN-3 — Document installation and operation**
   - Route: delegated with the implementation so commands match tested behavior.
   - Document canonical install, named connections, secret injection, removal, and prod/dev URLs.
   - Acceptance: instructions contain no secret values and identify the canonical repository.
+  - Evidence: documented canonical monorepo installation, descriptor commands, safe secret
+    injection, prod/dev routing, explicit removal, and the one-key/one-agent boundary.
 
 - [ ] **PLUGIN-4 — Verify and publish**
   - Route: delegated verification plus parent structural spot check.
@@ -83,5 +85,5 @@ method that Hermes does not expose, so the plugin can install without making Sum
 ## Progress
 
 - Completed: read-only repository and Hermes host mapping.
-- Current: PLUGIN-3.
-- Next: document canonical install, connection management, secret injection, and environment behavior.
+- Current: PLUGIN-4.
+- Next: run final checks, review diff, and report exact repository status to the parent.
