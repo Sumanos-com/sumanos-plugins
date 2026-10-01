@@ -76,10 +76,13 @@ method that Hermes does not expose, so the plugin can install without making Sum
   - Evidence: documented canonical monorepo installation, descriptor commands, safe secret
     injection, prod/dev routing, explicit removal, and the one-key/one-agent boundary.
 
-- [ ] **PLUGIN-4 — Verify and publish**
+- [x] **PLUGIN-4 — Verify and publish**
   - Route: delegated verification plus parent structural spot check.
   - Run focused tests, skill sync check, and any formatter/type checks declared by the repository.
   - Commit each completed work unit conventionally, then push the authorized feature branch.
+  - Evidence: independent verification passed with no high/medium findings; the native medium-risk
+    review was approved and acknowledged under `review-8f804c926a0e8429`; branch published and
+    PR `Sumanos-com/sumanos-plugins#6` opened against `main`.
 
 ## Verification Evidence
 
@@ -97,9 +100,12 @@ method that Hermes does not expose, so the plugin can install without making Sum
   `mcp_servers` open-dict; `tools/mcp_tool.py` recursively interpolates values and preserves
   unknown fields, then its HTTP runner reads documented transport settings such as `url` and
   `headers`. Its security validator inspects known command/args/env fields, not marker metadata.
+- Native review advisory `R3-001` is non-blocking follow-up work: removal should reject falsey
+  non-mapping `mcp_servers` values instead of normalizing them to an empty mapping.
 
 ## Progress
 
 - Completed: read-only repository and Hermes host mapping.
-- Current: PLUGIN-4.
-- Next: parent review; this worker must not push or open a PR.
+- Completed: PLUGIN-1 through PLUGIN-4.
+- Current: PR review and CI for `Sumanos-com/sumanos-plugins#6`.
+- Next: merge only after ordinary repository checks and maintainer review.
