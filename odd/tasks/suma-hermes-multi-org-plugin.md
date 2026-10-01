@@ -56,11 +56,15 @@ method that Hermes does not expose, so the plugin can install without making Sum
   - RED evidence: `python3 -m unittest suma/test/test_hermes_adapter.py` failed as expected:
     `materialize_connections`/`remove_connection` were absent and no skills were registered.
 
-- [ ] **PLUGIN-2 — Implement the supported Hermes adapter path**
+- [x] **PLUGIN-2 — Implement the supported Hermes adapter path**
   - Route: delegated writer; multiple non-trivial files are required.
   - Materialize Hermes MCP configuration without private PluginContext APIs and register all four
     shipped skills through supported APIs.
   - Acceptance: N descriptors produce N isolated MCP servers and all skills are discoverable.
+  - Hermes syntax verified in the pinned host: `mcp_servers.<name>.url` and `.headers` are
+    supported in `config.yaml`; `${VAR}` is expanded by Hermes config loading. The adapter uses
+    `read_raw_config`/`save_config` to avoid reading expanded key values.
+  - GREEN evidence: Python contract tests 4/4; focused Bun tests 16/16; skill sync check passed.
 
 - [ ] **PLUGIN-3 — Document installation and operation**
   - Route: delegated with the implementation so commands match tested behavior.
@@ -79,5 +83,5 @@ method that Hermes does not expose, so the plugin can install without making Sum
 ## Progress
 
 - Completed: read-only repository and Hermes host mapping.
-- Current: PLUGIN-2.
-- Next: implement config materialization and public skill registration.
+- Current: PLUGIN-3.
+- Next: document canonical install, connection management, secret injection, and environment behavior.
